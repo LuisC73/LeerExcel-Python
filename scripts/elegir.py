@@ -1,32 +1,37 @@
 from fileinput import filename
+# Importamos la libreria pandas para leer archivos excel
 import pandas as pd
-from array import array
+# Implementamos un try-catch para capturar los posibles errores en el sistema
 try:
+     # Declaramos una funcion main principal de la cual se crearan y empezaran a funcionar las diferentes funciones
     def main():
         df = leer_archivo()
         df = agregar_filtros(df)
 
         exportar_datos(df)
-        # mostrar_datos(df)
-
+    # Funcion que permite indicar el archivo excel que queremos escanear para buscar datos
     def leer_archivo():
         print("---------------BIENVENIDO---------------")
+        # Importamos libreria que permite unir strings
         import os
         l = 0
+         # creamos un array vacio para luego por consola ingresarle las columnas deseadas
         input_cols = []
-
         filename =  input("Por favor Ingrese el nombre del archivo:  ") + ".xlsx"
         if filename == "":
             print("ERROR, Ingrese un archivo valido...")
         print("Escaneando archivo.....")
+        # le proporcionamos la ubicacion de la carpeta al sistema
         path = r"D:\Users\practicante.geserv1\OneDrive - Centro de Servicios Mundial SAS\Imágenes\lm\Python\LeerExcel-Python\input\."
         fullpath = os.path.join(path,filename)
         cols = 0
+        # Utilizamos un ciclo while para llenar el array de columnas desde la consola
         while cols!= -1:
             print("--------- Para acabar escriba -1 ---------")
             cols = int(input("Ingrese la columna a buscar: "))
             input_cols.append(cols)
             print(input_cols)
+        # Leemos el archivo de excel indicado
         df = pd.read_excel(fullpath,
                         sheet_name="Hoja1",
                         header= 0,
@@ -36,22 +41,21 @@ try:
         print(df.shape)
         return df
 
-
+    # Funcion que permite aplicar filtros a nuestra hoja de excel para encontrar los clientes que necesitemos
     def agregar_filtros(df):
         cantidad = int(input("Por favor Ingrese la cantidad de clientes a filtrar: "))
         clientes = []
         i = 0
+        # utilizamos un ciclo while para incresar varios clientes
         while i < cantidad:
             print("Con que metodo quiere realizar la busqueda : \n 1.ID \n 2.NOMBRE_CLIENTE")
             buscar = int(input("Ingrese el valor: "))
             if buscar == 1:
                 idCliente = input("Por favor ingrese el id del cliente.....")
                 clientes.append(idCliente)
-                print(clientes)
                 if len(clientes)==cantidad:
                     print("Aplicando filtros.......")
                     df = df[df["NUMERO_DE_CUENTA"].isin(clientes)]
-                    print(df)
                     print("Filtro aplicado con exito")
             elif buscar == 2:
                 nombreCliente = input("Por favor ingrese el nombre del cliente....")
@@ -65,13 +69,7 @@ try:
             i+=1
         return df
 
-    # def mostrar_datos(df):
-    #     print(df.shape)
-    #     df_cols = df.columns
-
-    #     for col in df_cols:
-    #         print(df[col].head(5))
-
+    # Funcion que permite exportar los datos en un nuevo archivo excel
     def exportar_datos(df):
         print("Exportando archivo procesado")
         import os
